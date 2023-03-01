@@ -1,7 +1,5 @@
 name: Deploy layer
 
-concurrency: production-deployment
-
 on:
   push:
     branches:
@@ -20,9 +18,8 @@ jobs:
   deploy:
     name: Deploy Serverless stack
     runs-on: ubuntu-latest
-    environment: production
-    timeout-minutes: 5
-    needs: [create-sentry-release]
+    environment: eu-central-1
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
 
