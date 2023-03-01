@@ -13,6 +13,7 @@ permissions:
 env:
   PHP_VERSION: "8.2"
   PHP_EXTENSIONS: "curl, dom, simplexml, soap, bcmath, mbstring, zip"
+  AWS_REGION: eu-central-1
 
 jobs:
   deploy:
@@ -37,11 +38,11 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::950438783624:role/GItHubActionsOpenIDCOnnectRole
           role-session-name: ${{ env.DEPLOYMENT_NAME }}-deployer
-          aws-region: ${{ env.DEPLOYMENT_REGION }}
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Build layer
         run: make publish
         env:
           layer: proj
           php_versions: 82
-          only_region: eu-central-1
+          only_region: ${{ env.AWS_REGION }}
