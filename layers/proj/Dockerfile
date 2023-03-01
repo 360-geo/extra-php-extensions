@@ -27,12 +27,21 @@ RUN cmake ..
 RUN cmake --build .
 RUN cmake --build . --target install
 
-RUN ls -alh ${PROJ_BUILD_DIR}/proj-9.1.1/build/bin/
-
 FROM scratch
 
-# proj dependencies
-COPY --from=ext /usr/lib64/libtiff.so.5 /opt/bref/lib/libtiff.so.5
-COPY --from=ext /usr/local/lib/libsqlite3.so.0 /opt/bref/lib/libsqlite3.so.0
+# yum dependency shared objects
+COPY --from=ext /usr/lib64/libtiff.so.5 /opt/bref/lib64/libtiff.so.5
+COPY --from=ext /usr/lib64/libjbig.so.2.0 /opt/bref/lib64/libjbig.so.2.0
+COPY --from=ext /usr/lib64/libjpeg.so.62 /opt/bref/lib64/libjpeg.so.62
 
+# compiled dependency shared objects
+COPY --from=ext /usr/local/lib/libsqlite3.so.0 /opt/bref/lib64/libsqlite3.so.0
+
+# compiled shared objects
+COPY --from=ext /tmp/build/proj/proj-9.1.1/build/lib/* /opt/bref/lib64/
+
+# compiled binaries
 COPY --from=ext /tmp/build/proj/proj-9.1.1/build/bin/* /opt/bin/
+
+# compiled config files
+COPY --from=ext /tmp/build/proj/proj-9.1.1/build/data/* /opt/360geo/proj/config/
